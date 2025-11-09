@@ -1,0 +1,114 @@
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+bin/
+obj/
+out/
+artifacts/
+
+# Publish / deployment
+publish/
+*.Publish.xml
+*.publishsettings
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.project.lock.json
+.nuget/
+
+# Rider
+*.sln.iml
+
+# dotnet / SDK
+project.lock.json
+Generated\ Files/
+*.dotCover
+*.ncrunch*
+*.nunit*
+*.VisualState.xml
+
+# Test results / coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+coverage*.xml
+*.trx
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.sqlite3
+
+# User secrets
+secrets.json
+secrets.*
+*.usersecrets
+
+# IIS / IIS Express
+IISExpress/
+iisexpress.zip
+
+# Certificates and keys
+*.pfx
+*.key
+*.pem
+
+# Docker
+docker-compose.override.yml
+**/docker-compose.override.yml
+
+# Node / front-end (if present)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+.pnpm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.stackdump
+*~
+
+# IDE helpers and temporary files
+*.resharper
+_ReSharer*/
+_ReSharper*/
+*.DotSettings.user
+
+# Misc
+.vagrant/
+*.bak
+*.bak.*
+*.tmp
+*.temp
+
+# Rider local history
+.idea/.idea*.xml
+.idea/.idea.*
+
+# Environment files
+.env
+.env.*.local
+.env.local
+
+# Ignore published NuGet symbol packages
+*.symbols.nupkg
