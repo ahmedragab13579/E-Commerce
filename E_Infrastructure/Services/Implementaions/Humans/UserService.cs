@@ -61,6 +61,41 @@ namespace E_Infrastructure.Services.Implementaions.Humans
                 return Result<int>.Fail("SERVER_ERROR", $"An unexpected error occurred: {ex.Message}");
             }
         }
+        public async Task<Result<int>> Add(AddNewAdminDto Admin)
+        {
+            if (Admin == null)
+            {
+                return Result<int>.Fail("NULL_REFERENCE", "Admin Object Is Null");
+            }
+
+            if (await unitOfWork.Users.IsUserNameExist(Admin.UserName))
+            {
+                return Result<int>.Fail("DUPLICATE_USER_NAME", "Admin Name Is Already Exist");
+            }
+            if (await unitOfWork.Users.IsEmailExist(Admin.Email))
+            {
+                return Result<int>.Fail("DUPLICATE_EMAIL", "Email Is Already Exist");
+            }
+            try
+            {
+                var NewUser = new User(Admin.FirstName, Admin.LastName, Admin.UserName, Admin.Email, Admin.Phone, _passwordService.HashPassword(Admin.Password), Admin.RoleId);
+                await unitOfWork.Users.AddAsync(NewUser);
+                int success = await unitOfWork.CompleteTask();
+                if (success > 0)
+                {
+                    return Result<int>.Ok(NewUser.Id, "Admin Added Successfully"); 
+                }
+                return Result<int>.Fail("SAVE_FAILED", "Could not save the Admin.");
+            }
+            catch (ArgumentException ex)
+            {
+                return Result<int>.Fail("INVALID_DATA", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return Result<int>.Fail("SERVER_ERROR", $"An unexpected error occurred: {ex.Message}");
+            }
+        }
 
         public async Task<Result<int>> Update(UpdateUserDto entity)
         {

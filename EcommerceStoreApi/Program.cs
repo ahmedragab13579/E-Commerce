@@ -1,3 +1,4 @@
+using Application.Services.InterFaces.Humans;
 using E_Infrastructure.MiddleWare.ErrorService;
 using E_Infrastructure.MiddleWare.IsBlockedUser;
 using E_Infrastructure.MiddleWare.Order_Amount_Service;
@@ -17,6 +18,9 @@ builder.Services
     .AddSecurity(builder.Configuration)
     .AddWebServices(builder.Configuration)
     .AddSwagger();
+
+builder.Services.AddHttpContextAccessor(); 
+builder.Services.AddScoped<ICurrentUserService, E_Infrastructure.Services.Implementaions.Humans.CurrentUserService>();
 
 
 builder.Services.AddMassTransit(configure =>
