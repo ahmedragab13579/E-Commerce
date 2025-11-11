@@ -43,7 +43,8 @@ namespace E_Domain.Models
         {
         }
 
-        public User(string firstName, string lastName, string userName, string email, string? phone, string passwordHash) 
+
+        private void ValidateData(string firstName, string lastName, string userName, string email, string? phone, string passwordHash)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new ArgumentException("First name is required.", nameof(firstName));
@@ -51,10 +52,16 @@ namespace E_Domain.Models
                 throw new ArgumentException("Last name is required.", nameof(lastName));
             if (string.IsNullOrWhiteSpace(userName))
                 throw new ArgumentException("Username is required.", nameof(userName));
-            if (string.IsNullOrWhiteSpace(email)) 
+            if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("Email is required.", nameof(email));
             if (string.IsNullOrWhiteSpace(passwordHash))
                 throw new ArgumentException("Password hash is required.", nameof(passwordHash));
+
+        }
+        public User(string firstName, string lastName, string userName, string email, string? phone, string passwordHash) 
+        {
+            ValidateData(firstName, lastName, userName, email, phone, passwordHash);
+
 
             FirstName = firstName;
             LastName = lastName;
@@ -63,6 +70,21 @@ namespace E_Domain.Models
             Phone = phone; 
             PasswordHash = passwordHash;
             RoleId = 2; 
+            IsBlocked = false;
+            IsDeleted = false;
+        }
+        public User(string firstName, string lastName, string userName, string email, string? phone, string passwordHash,int roleid) 
+        {
+            ValidateData(firstName, lastName, userName, email, phone, passwordHash);
+            if(Enum.TryParse(Enum.GetName(typeof(E_Domain.Enums.Roles), roleid), out E_Domain.Enums.Roles _)==false)
+                throw new ArgumentException("RoleId is invalid.", nameof(roleid));
+            FirstName = firstName;
+            LastName = lastName;
+            UserName = userName;
+            Email = email;
+            Phone = phone; 
+            PasswordHash = passwordHash;
+            RoleId = roleid; 
             IsBlocked = false;
             IsDeleted = false;
         }

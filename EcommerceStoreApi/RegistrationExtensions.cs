@@ -112,7 +112,6 @@ namespace EcommerceStoreApi
             services.AddScoped<IUserRepository, UserRepository>(); 
             services.AddScoped<IRoleRepository, RoleRepository>();
 
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IMappingServices, MappingService>();
             services.AddScoped<ICartSessionService, CartSessionService>();
             services.AddScoped<ICategoryService, CategoryService>();
