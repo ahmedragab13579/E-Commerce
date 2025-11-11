@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+	<xUnit>
+		<ShadowCopy>false</ShadowCopy>
+	</xUnit>
+
+	<RunConfiguration>
+		<DisableAppDomain>true</DisableAppDomain>
+
+		<TargetPlatform>x64</TargetPlatform>
+
+	</RunConfiguration>
+</RunSettings>

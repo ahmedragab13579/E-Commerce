@@ -1,23 +1,19 @@
-﻿using Application.Dtos.Order;
-using E_Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Application.Dtos.User
 {
-    public class AddUserDto
+    public class AddNewAdminDto
     {
-
         [Required, MaxLength(100)]
-        public string FirstName { get;  set; }
+        public string FirstName { get; set; }
         [Required, MaxLength(100)]
-        public string LastName { get;  set; }
+        public string LastName { get; set; }
 
         [Required, MaxLength(100)]
         public string UserName { get; set; }
@@ -27,12 +23,12 @@ namespace Application.Dtos.User
         [MaxLength(15)]
         [RegularExpression(@"^(\+?\d{1,3})?\d{10,15}$", ErrorMessage = "Invalid phone number format.")]
         public string? Phone { get; set; }
-        [Required, MinLength(8), MaxLength(15)]
+        [Required, MinLength(8),MaxLength(15)]
         public string Password { get; set; }
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}";
-
-
+        [Required]
+        public int RoleId { get; set; }
 
     }
 }

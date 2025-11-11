@@ -12,5 +12,6 @@ namespace E_Domain.Enums
         Admin,
         Manager,
         Moderator,
+        SuperAdmin
     }
 }

@@ -16,6 +16,7 @@ namespace Application.Services.InterFaces.Humans
     public interface IUserService
     {
         Task<Result<int>> Add(AddUserDto NewUser);
+        Task<Result<int>> Add(AddNewAdminDto Admin);
         Task<Result<UserDto>> Login(LoginDto login);
         Task<Result<int>> ChangePassword(string OldPassword, string NewPassword);
         Task<Result<List<UserDto>>> GetMustActiveUsers(int count = 10);

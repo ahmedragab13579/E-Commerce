@@ -14,13 +14,10 @@ namespace E_Infrastructure.Data
 {
     public class AuditInterceptor : SaveChangesInterceptor
     {
-        // (الـ Constructor بتاعك زي ما هو)
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICurrentUserService _currentUserService;
 
-        public AuditInterceptor(ICurrentUserService currentUserService, IHttpContextAccessor httpContextAccessor)
+        public AuditInterceptor(ICurrentUserService currentUserService)
         {
-            _httpContextAccessor = httpContextAccessor;
             _currentUserService = currentUserService;
         }
 
