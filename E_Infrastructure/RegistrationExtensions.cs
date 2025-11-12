@@ -1,5 +1,5 @@
 ﻿
-namespace EcommerceStoreApi
+namespace E_Infrastructure
 {
     using Application.DataReposatory.Interfaces;
     using Application.DataReposatory.Interfaces.Carts;
@@ -30,14 +30,15 @@ namespace EcommerceStoreApi
     using E_Infrastructure.Services.Implementaions.Passwordservice;
     using E_Infrastructure.Services.Implementaions.Registration;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
-    using Microsoft.OpenApi.Models;
     using Serilog;
     using Serilog.Events;
     using Serilog.Sinks.MSSqlServer;
-    using StackExchange.Redis;
     using System.Text;
     using System.Threading.RateLimiting;
 
@@ -222,39 +223,5 @@ namespace EcommerceStoreApi
             return services;
         }
 
-        public static IServiceCollection AddSwagger(this IServiceCollection services)
-        {
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Please enter a valid token (e.g., 'Bearer eyJhbGciOi...')"
-                });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] {}
-                    }
-                });
-            });
-            return services;
-        }
     }
 }
