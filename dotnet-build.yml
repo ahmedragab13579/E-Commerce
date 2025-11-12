@@ -1,0 +1,44 @@
+name: .NET Build, Test, and Publish
+
+on:
+  push:
+    branches: [ main ] 
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+      packages: write 
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+        source-url: https://nuget.pkg.github.com/ahmedragab13579/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+    
+    
+    - name: Pack SharedMessages
+      if: github.event_name == 'push'
+      run: dotnet pack SharedMessages/SharedMessages.csproj -c Release -o ./packages
+
+    - name: Publish to GitHub Packages
+      if: github.event_name == 'push'
+      run: dotnet nuget push "./packages/*.nupkg" --skip-duplicate
+
+
+
