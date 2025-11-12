@@ -1,9 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>ECommerce.SharedMessages</PackageId>
+
+		<Version>1.0.0</Version>
+
+		<Authors>Ahmed Ragab</Authors>
+
+		<Company>AhmedRagab</Company>
+
+		<RepositoryUrl>https://github.com/ahmedragab13579/E-Commerce.git</RepositoryUrl>
+
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
 
 </Project>
