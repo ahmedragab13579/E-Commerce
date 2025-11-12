@@ -29,7 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\E-Domain\E-Domain.csproj" />
-    <ProjectReference Include="..\EcommerceStoreApi\EcommerceStoreApi.csproj" />
     <ProjectReference Include="..\E_Infrastructure\E_Infrastructure.csproj" />
   </ItemGroup>
 

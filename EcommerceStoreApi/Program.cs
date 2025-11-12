@@ -1,10 +1,12 @@
-using Application.Services.InterFaces.Humans;
+using E_Infrastructure;
 using E_Infrastructure.MiddleWare.ErrorService;
 using E_Infrastructure.MiddleWare.IsBlockedUser;
 using E_Infrastructure.MiddleWare.Order_Amount_Service;
-using EcommerceStoreApi;
+using EcommerceStoreApi; 
 using MassTransit;
+using Microsoft.OpenApi.Models; 
 using Serilog;
+using Application.Services.InterFaces.Humans; 
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -17,9 +19,8 @@ builder.Services
     .AddApplicationServices()
     .AddSecurity(builder.Configuration)
     .AddWebServices(builder.Configuration)
-    .AddSwagger();
-
-builder.Services.AddHttpContextAccessor(); 
+    .AddSwagger(); 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, E_Infrastructure.Services.Implementaions.Humans.CurrentUserService>();
 
 
@@ -32,43 +33,54 @@ builder.Services.AddMassTransit(configure =>
             h.Username("guest");
             h.Password("guest");
         });
-
     });
 });
-var app = builder.Build();
 
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-if (app.Environment.IsDevelopment())
+app.Run();
+
+namespace EcommerceStoreApi
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    public static class RegistrationExtensions
+    {
+     
+        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        {
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(options => 
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-app.UseRateLimiter();
-app.UseSession();
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token (e.g., 'Bearer eyJhbGciOi...')"
+                });
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseMiddleware<GlobalErrorHandlingMiddleware>();
-app.UseMiddleware<OrderQuantityValidationMiddleware>();
-app.UseMiddleware<AccountStatusMiddleware>();
-
-app.MapControllers();
-
-try
-{
-    Log.Information("Starting web host");
-    app.Run();
-}
-catch (Exception ex)
-{
-    Log.Fatal(ex, "Host terminated unexpectedly");
-}
-finally
-{
-    Log.CloseAndFlush();
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
+            return services;
+        }
+    }
 }
