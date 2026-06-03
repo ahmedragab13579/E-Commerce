@@ -61,7 +61,7 @@ E-Commerce/
 
 ### Database Diagram
 
-![Database Diagram](https://via.placeholder.com/800x600?text=Database+Diagram)
+![Database Diagram](https://i.suar.me/Mpp13/l)
 
 The database includes the following main entities:
 
@@ -120,97 +120,82 @@ The database includes the following main entities:
 
 ### 1. Home Page
 
-![Home Page](https://via.placeholder.com/800x600?text=Home+Page)
+![Home Page](https://i.suar.me/rgOO1/l)
 
 Welcome screen with featured products and navigation.
 
 ### 2. Product Listing
 
-![Product Listing](https://via.placeholder.com/800x600?text=Product+Listing)
+![Product Listing](https://i.suar.me/7nPP0/l)
 
 Browse all products with pagination and filtering options.
 
 ### 3. Product Details
 
-![Product Details](https://via.placeholder.com/800x600?text=Product+Details)
+![Product Details](https://i.suar.me/ogqql/l)
 
 Detailed product information including description, price, and reviews.
 
 ### 4. Shopping Cart
 
-![Shopping Cart](https://via.placeholder.com/800x600?text=Shopping+Cart)
+![Shopping Cart](https://i.suar.me/xzool/l)
 
 Review items in cart before checkout with quantity adjustment.
 
 ### 5. Checkout Process
 
-![Checkout](https://via.placeholder.com/800x600?text=Checkout+Process)
+![Checkout](https://i.suar.me/8zVeZ/l)
 
 Complete multi-step checkout with shipping and payment information.
 
 ### 6. Order Confirmation
 
-![Order Confirmation](https://via.placeholder.com/800x600?text=Order+Confirmation)
+![Order Confirmation](https://i.suar.me/8zVeZ/l)
 
 Order success page with confirmation details and tracking info.
 
 ### 7. Admin Dashboard
 
-![Admin Dashboard](https://via.placeholder.com/800x600?text=Admin+Dashboard)
+![Admin Dashboard](https://i.suar.me/3zVVr/l)
 
 Admin control panel for managing store operations.
 
 ### 8. User Profile
 
-![User Profile](https://via.placeholder.com/800x600?text=User+Profile)
+![User Profile](https://i.suar.me/YQrrZ/l)
 
 User account settings and order history view.
 
 ### 9. Product Management
 
-![Product Management](https://via.placeholder.com/800x600?text=Product+Management)
-
+![Product Management](https://i.suar.me/zXKKW/l)
+![Product Management](https://i.suar.me/Jp774/l)
+![Product Management](https://i.suar.me/4z44Q/l)
 Admin section for adding, editing, and deleting products.
 
 ### 10. Order Management
 
-![Order Management](https://via.placeholder.com/800x600?text=Order+Management)
+![Order Management](https://i.suar.me/9zVVX/l)
 
 Admin section for tracking and managing customer orders.
 
-### 11. Search Functionality
+### 11. Wish List
 
-![Search Feature](https://via.placeholder.com/800x600?text=Search+Functionality)
+![Search Feature](https://i.suar.me/rgOO1/l)
 
 Search products by name, category, or keywords.
 
-### 12. Filter & Sort
-
-![Filter and Sort](https://via.placeholder.com/800x600?text=Filter+%26+Sort)
-
-Advanced filtering and sorting options for better browsing experience.
-
-### 13. Reviews & Ratings
-
-![Reviews and Ratings](https://via.placeholder.com/800x600?text=Reviews+%26+Ratings)
-
-View and submit product reviews with star ratings.
-
 ### 14. User Authentication
 
-![User Authentication](https://via.placeholder.com/800x600?text=User+Authentication)
+![User Authentication](https://i.suar.me/wzrr8/l)
+![User Authentication](https://i.suar.me/V9jjp/l)
 
 Secure login and registration interface with validation.
 
-### 15. Payment Gateway Integration
+### 16. Cagegory Management
 
-![Payment Gateway](https://via.placeholder.com/800x600?text=Payment+Gateway)
-
-Secure payment processing with multiple payment methods.
-
-### 16. Inventory Management
-
-![Inventory Management](https://via.placeholder.com/800x600?text=Inventory+Management)
+![Inventory Management](https://i.suar.me/g433X/l)
+![Inventory Management](https://i.suar.me/Mp22P/l)
 
 Stock tracking and inventory level management for products.
 
@@ -384,7 +369,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For support, issues, or questions:
 - Open an issue on GitHub: [Issues](https://github.com/ahmedragab13579/E-Commerce/issues)
 - Contact: Ahmed Ragab
-- Email: contact@example.com
+- Email: ahmedharidy@gmail.com
+- Linked In: https://www.linkedin.com/in/ahmed-ragab-a7041b34b
+- Work: https://www.forlanso.com/ar/bc/ahmd-ragab
 
 ---
 
