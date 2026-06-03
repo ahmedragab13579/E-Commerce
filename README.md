@@ -390,16 +390,6 @@ For support, issues, or questions:
 
 ---
 
-## 📚 Documentation
-
-For detailed documentation, please refer to:
-- [API Documentation](./docs/API.md)
-- [Installation Guide](./docs/INSTALLATION.md)
-- [Architecture Overview](./docs/ARCHITECTURE.md)
-- [Database Schema](./docs/DATABASE.md)
-
----
-
 ## ✅ Checklist for New Developers
 
 - [ ] Fork the repository
