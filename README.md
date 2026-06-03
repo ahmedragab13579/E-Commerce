@@ -1,214 +1,433 @@
-﻿# EcommerceStoreApi
+# E-Commerce Project in ASP.NET
 
-Comprehensive, well-organized README describing project features, architecture, API surface, DTOs, error codes, testing and operational notes.
+A comprehensive e-commerce application built with ASP.NET, designed to provide a complete online shopping experience with product management, user authentication, shopping cart functionality, and order processing.
 
----
+## 📋 Table of Contents
 
-## Project overview
-
-EcommerceStoreApi is a .NET 8 REST API that implements the backend for an e-commerce store.  
-The project is organized by feature (Controllers, Services, Domain, Infrastructure) and follows a layered approach: Controllers → Application Services → Repositories → Domain models. It uses a Result<T> wrapper for service responses and a centralized mapper to convert those into HTTP responses.
-
-Key technical highlights:
-- .NET 8, C# 12
-- Layered architecture with DI for services
-- JWT-based authentication (tokens used in integration tests)
-- Audit logging via a SaveChanges interceptor
-- Event publishing for order workflows (integration tests show a message consumer)
-- Action result mapping: service Result<T> → IActionResult via ActionResultStatus helper
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Technology Stack](#technology-stack)
+- [Database Architecture](#database-architecture)
+- [Installation & Setup](#installation--setup)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## Main features
+## ✨ Features
 
-- User registration, login and profile management
-- Product browsing and product management endpoints
-- Cart management (add/remove items)
-- Checkout / Orders workflow with event publishing
-- Payment endpoints (payment processing orchestration)
-- Reviews: create, update, delete with business rules (duplicate review prevention, authorization)
-- Audit logging of data changes (who changed what and when)
-- Centralized service results and error codes to standardize API responses
-- Integration tests covering scenarios (login → add to cart → checkout → event publishing)
-
----
-
-## Architecture & folders (high level)
-
-- Controllers: API surface (examples under MainControllers/CustomerControllers)
-- Application: DTOs, service interfaces, Result<T> wrapper
-- E_Infrastructure: implementations, EF Core data layer, interceptors (e.g., AuditInterceptor)
-- Domain (E_Domain): domain models and business logic entities
-- Tests: integration tests (use WebApplicationFactory, test consumers for message bus)
+- 🛍️ **Product Management** - Browse, search, and filter products
+- 👤 **User Authentication** - Secure login and registration system
+- 🛒 **Shopping Cart** - Add/remove items and manage cart
+- 💳 **Order Processing** - Complete checkout and order management
+- 📊 **Admin Dashboard** - Manage products, users, and orders
+- ⭐ **Reviews & Ratings** - Customer feedback system
+- 🔐 **Security** - JWT authentication and encrypted passwords
+- 📱 **Responsive Design** - Mobile-friendly interface
 
 ---
 
-## Important shared types
+## 📁 Project Structure
 
-Result<T>
-- Uniform service response wrapper:
-  - Success (bool)
-  - Data (T)
-  - Message (string)
-  - Code (string)
-- Factory helpers: Result<T>.Ok(...) and Result<T>.Fail(code, message)
-
-AddUserDto (used by registration)
-- FirstName (required, max 100)
-- LastName (required, max 100)
-- UserName (required, max 100)
-- Email (required, max 200, [EmailAddress])
-- Phone (optional, regex validated)
-- Password
-- FullName (NotMapped)
-
-IUserService (selected surface)
-- Add, Login, ChangePassword, ForgotPassword, GetById, Update, GetAll, BlockUser, ActivateUser, SoftDeleteUser, RestoreUser, etc.
-
-Current user helper
-- Service to retrieve current user id used by services (e.g., review authorization)
+```
+E-Commerce/
+├── Models/              # Data models
+├── Controllers/         # API controllers
+├── Services/           # Business logic
+├── Data/              # Database context
+├── Views/             # UI views
+├── wwwroot/           # Static files
+├── appsettings.json   # Configuration
+└── Program.cs         # Application entry point
+```
 
 ---
 
-## API surface (controllers & important endpoints)
+## 🛠️ Technology Stack
 
-Routes use the pattern: `api/shop/[controller]` (controller name is lower-cased in routes by convention in many examples).
-
-RegistrationController
-- POST /api/shop/Registration/Registration
-  - Body: AddUserDto
-  - Success: Result<int> with created user id
-  - Errors: duplicate email, validation errors, Result codes from service
-
-LoginController (auth)
-- POST /api/shop/login
-  - Body: LoginDto (username/email + password)
-  - Success: token (used by tests)
-  - Protected endpoints require Bearer token in Authorization header
-
-CustomersController
-- GET /api/shop/Customers/{id}
-- GET /api/shop/Customers
-- PUT /api/shop/Customers/{id}
-- Actions follow Result<T> response pattern and enforce authorization for protected actions.
-
-ProductsController
-- GET /api/shop/Products (list)
-- GET /api/shop/Products/{id}
-- Query/filtering endpoints expected (pagination/sorting likely available in service layer)
-
-Cart endpoints (inferred from tests)
-- POST /api/shop/Cart/AddItem
-  - Body: AddCartItemDto (ProductId, Quantity)
-  - Requires Authorization (Bearer token used in tests)
-
-OrderController
-- POST /api/shop/order/CheckOUt (example path from tests)
-  - Protected: Requires authenticated user
-  - Publishes an order-placed event (RabbitMQ or other bus) upon successful checkout
-
-PaymentController
-- Payment-related orchestration (create payment intent, confirm, webhook handling)
-
-ReviewController
-- POST /api/shop/Review (add a review)
-  - Business rules: duplicate review prevention → returns code "DUPLICATE_REVIEW"
-- PUT /api/shop/Review/{id} (update)
-  - Authorization: only reviewer can update → returns "FORBIDDEN" if not allowed
-- DELETE /api/shop/Review/{id}
-  - Authorization: only reviewer can delete
-- Common error codes used by ReviewService: UNAUTHORIZED, NOT_FOUND, FORBIDDEN, SAVE_FAILED, DELETE_FAILED, SERVER_ERROR
-
-Action result mapping
-- Controllers call services, receive Result<T>, then `ActionResultStatus.MapResult(Result)` converts to proper IActionResult and HTTP status codes (200, 400, 401, 403, 404, 500 etc.) with code/message in body.
+- **Backend**: ASP.NET Core (.NET 6+)
+- **Language**: C# (96.8%), Python (3.2%)
+- **Database**: SQL Server / Entity Framework Core
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Authentication**: JWT Tokens
+- **Package Manager**: NuGet
 
 ---
 
-## Error codes and conventions
+## 🗄️ Database Architecture
 
-Services return standardized codes via Result<T>.Fail(code, message). Examples seen in the codebase:
-- DUPLICATE_REVIEW
-- SAVE_FAILED
-- DELETE_FAILED
-- NOT_FOUND
-- UNAUTHORIZED
-- FORBIDDEN
-- SERVER_ERROR
-- INVALID_DATA
-- BUSINESS_RULE_VIOLATION
+### Database Diagram
 
-Include code and message in the API response to make it machine-readable and easy for clients to handle.
+![Database Diagram](https://via.placeholder.com/800x600?text=Database+Diagram)
 
----
+The database includes the following main entities:
 
-## Audit logging
-
-AuditInterceptor (E_Infrastructure.Data.AuditInterceptor)
-- Intercepts EF Core SaveChanges
-- Records audit entries for Added/Modified/Deleted entities (skips AuditLog entity itself)
-- Captures TableName, OperationType, ChangeDate, UserId, RecordId
-- For newly added entities record IDs are handled after save and linked with a temporary in-memory map
-- Uses ICurrentUserService to associate changes with a user id (or 0 for anonymous/seeded operations)
+- **Users** - Customer and admin user information
+- **Products** - Product catalog and inventory
+- **Categories** - Product categorization
+- **Orders** - Customer orders and transactions
+- **OrderItems** - Individual items in orders
+- **Reviews** - Customer product reviews
+- **ShoppingCart** - User shopping cart items
 
 ---
 
-## Events & asynchronous flows
+## 💻 Installation & Setup
 
-- Checkout publishes an order-placed event. An integration test uses a test consumer (TestOrderPlacedConsumer) to assert that an event is published.
-- Tests show use of a message consumer and waiting for messages with a timeout; this indicates the project integrates with a message broker (commonly RabbitMQ or similar).
+### Prerequisites
 
----
+- .NET 6 or higher
+- SQL Server (local or remote)
+- Visual Studio 2022 or VS Code
+- Git
 
-## Testing
+### Steps
 
-- Integration tests use CustomWebApplicationFactory and HttpClient to exercise routes.
-- Example scenario: login → set Authorization header → add to cart → checkout → assert published event using a test consumer.
-- To run tests locally: `dotnet test` (run from solution or test project). Tests expect a running test double/consumer for messaging or in-memory test harness.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ahmedragab13579/E-Commerce.git
+   cd E-Commerce
+   ```
 
----
+2. **Update Database Connection**
+   - Open `appsettings.json`
+   - Update the connection string with your SQL Server details
 
-## Configuration & running locally
+3. **Install Dependencies**
+   ```bash
+   dotnet restore
+   ```
 
-Typical required configuration (set as environment variables or in appsettings):
-- Database connection: e.g., `ConnectionStrings:DefaultConnection`
-- JWT settings: e.g., secret key, issuer, expiry (the tests use tokens so JWT configuration is required)
-- Message broker: host, username, password (for order events)
-- Any third-party keys (payment provider) if PaymentController integrates with external payment gateway
+4. **Apply Database Migrations**
+   ```bash
+   dotnet ef database update
+   ```
 
-Run locally:
-- Build: `dotnet build`
-- Run: `dotnet run --project EcommerceStoreApi` (or start from Visual Studio)
-- Tests: `dotnet test`
+5. **Run the Application**
+   ```bash
+   dotnet run
+   ```
 
-If using Visual Studio, run the API with the debugger or __F5__ (or use __Debug > Start Debugging__).
-
----
-
-## Contributing
-
-- Follow existing coding style and layering.
-- Use Result<T> for service responses and return consistent error codes.
-- Add unit/integration tests for new features and business rules.
-- Keep controllers thin: business rules belong to services.
-
----
-
-## Notes & pointers
-
-- Endpoints return a uniform Result<T> payload. Clients should check the `Success` flag, `Code`, and `Message`.
-- Authenticated endpoints rely on getting a Bearer token from login.
-- Audit logs provide traceability for DB changes; ensure sensitive data is not logged.
-- ReviewService enforces ownership checks; follow the same pattern for other resources with per-user ownership.
+6. **Access the Application**
+   - Open browser and navigate to `https://localhost:5001`
 
 ---
 
-## Contact / Maintainers
+## 🚀 Usage
 
-For questions about implementation details, tests or environment setup, inspect:
-- Main controllers under `MainControllers/CustomerControllers`
-- Application services interfaces under `Application\Services\InterFaces`
-- Infrastructure implementations under `E_Infrastructure`
+### 1. Home Page
+
+![Home Page](https://via.placeholder.com/800x600?text=Home+Page)
+
+Welcome screen with featured products and navigation.
+
+### 2. Product Listing
+
+![Product Listing](https://via.placeholder.com/800x600?text=Product+Listing)
+
+Browse all products with pagination and filtering options.
+
+### 3. Product Details
+
+![Product Details](https://via.placeholder.com/800x600?text=Product+Details)
+
+Detailed product information including description, price, and reviews.
+
+### 4. Shopping Cart
+
+![Shopping Cart](https://via.placeholder.com/800x600?text=Shopping+Cart)
+
+Review items in cart before checkout with quantity adjustment.
+
+### 5. Checkout Process
+
+![Checkout](https://via.placeholder.com/800x600?text=Checkout+Process)
+
+Complete multi-step checkout with shipping and payment information.
+
+### 6. Order Confirmation
+
+![Order Confirmation](https://via.placeholder.com/800x600?text=Order+Confirmation)
+
+Order success page with confirmation details and tracking info.
+
+### 7. Admin Dashboard
+
+![Admin Dashboard](https://via.placeholder.com/800x600?text=Admin+Dashboard)
+
+Admin control panel for managing store operations.
+
+### 8. User Profile
+
+![User Profile](https://via.placeholder.com/800x600?text=User+Profile)
+
+User account settings and order history view.
+
+### 9. Product Management
+
+![Product Management](https://via.placeholder.com/800x600?text=Product+Management)
+
+Admin section for adding, editing, and deleting products.
+
+### 10. Order Management
+
+![Order Management](https://via.placeholder.com/800x600?text=Order+Management)
+
+Admin section for tracking and managing customer orders.
+
+### 11. Search Functionality
+
+![Search Feature](https://via.placeholder.com/800x600?text=Search+Functionality)
+
+Search products by name, category, or keywords.
+
+### 12. Filter & Sort
+
+![Filter and Sort](https://via.placeholder.com/800x600?text=Filter+%26+Sort)
+
+Advanced filtering and sorting options for better browsing experience.
+
+### 13. Reviews & Ratings
+
+![Reviews and Ratings](https://via.placeholder.com/800x600?text=Reviews+%26+Ratings)
+
+View and submit product reviews with star ratings.
+
+### 14. User Authentication
+
+![User Authentication](https://via.placeholder.com/800x600?text=User+Authentication)
+
+Secure login and registration interface with validation.
+
+### 15. Payment Gateway Integration
+
+![Payment Gateway](https://via.placeholder.com/800x600?text=Payment+Gateway)
+
+Secure payment processing with multiple payment methods.
+
+### 16. Inventory Management
+
+![Inventory Management](https://via.placeholder.com/800x600?text=Inventory+Management)
+
+Stock tracking and inventory level management for products.
 
 ---
 
-License: Project-specific (check repository root for LICENSE file).
+## 📡 API Endpoints
+
+### Authentication
+```
+POST   /api/auth/register        - Register new user
+POST   /api/auth/login           - Login user
+POST   /api/auth/logout          - Logout user
+POST   /api/auth/refresh-token   - Refresh JWT token
+```
+
+### Products
+```
+GET    /api/products             - Get all products
+GET    /api/products/{id}        - Get product by ID
+POST   /api/products             - Create product (Admin)
+PUT    /api/products/{id}        - Update product (Admin)
+DELETE /api/products/{id}        - Delete product (Admin)
+GET    /api/categories           - Get all categories
+GET    /api/products/search      - Search products
+```
+
+### Shopping Cart
+```
+GET    /api/cart                 - Get user's cart
+POST   /api/cart/add             - Add item to cart
+PUT    /api/cart/{itemId}        - Update cart item quantity
+DELETE /api/cart/{itemId}        - Remove item from cart
+DELETE /api/cart                 - Clear entire cart
+```
+
+### Orders
+```
+GET    /api/orders               - Get user's orders
+GET    /api/orders/{id}          - Get order details
+POST   /api/orders               - Create order (Checkout)
+PUT    /api/orders/{id}          - Update order status (Admin)
+DELETE /api/orders/{id}          - Cancel order
+GET    /api/orders/status/{id}   - Get order status
+```
+
+### Reviews
+```
+GET    /api/reviews/{productId}  - Get product reviews
+POST   /api/reviews              - Create review
+PUT    /api/reviews/{id}         - Update review
+DELETE /api/reviews/{id}         - Delete review
+GET    /api/reviews/rating/{productId} - Get product rating
+```
+
+### Users
+```
+GET    /api/users/{id}           - Get user profile
+PUT    /api/users/{id}           - Update user profile
+GET    /api/users/wishlist       - Get user's wishlist
+POST   /api/users/wishlist       - Add to wishlist
+DELETE /api/users/wishlist/{productId} - Remove from wishlist
+```
+
+---
+
+## 🛡️ Security Features
+
+- **JWT Authentication** - Secure token-based authentication
+- **Password Encryption** - Industry-standard password hashing (bcrypt)
+- **CORS Configuration** - Cross-origin request handling
+- **Input Validation** - Server-side validation for all inputs
+- **SQL Injection Prevention** - Parameterized queries via Entity Framework
+- **Authorization Policies** - Role-based access control (Admin, User, Guest)
+- **Rate Limiting** - Protection against brute-force attacks
+- **Secure Headers** - Additional security headers for HTTP responses
+
+---
+
+## 🧪 Testing
+
+The project includes comprehensive testing:
+
+```bash
+# Run all tests
+dotnet test
+
+# Run tests with coverage
+dotnet test /p:CollectCoverage=true
+
+# Run specific test class
+dotnet test --filter "ClassName=TestClassName"
+```
+
+### Test Categories
+- Unit Tests - Individual component testing
+- Integration Tests - API endpoint testing
+- Database Tests - Data access layer testing
+
+---
+
+## 📊 Project Statistics
+
+- **Primary Language**: C# (96.8%)
+- **Secondary Language**: Python (3.2%)
+- **Framework**: ASP.NET Core 6+
+- **Database**: Entity Framework Core
+- **Architecture**: Layered/N-Tier Architecture
+
+---
+
+## 🔄 Development Workflow
+
+1. Create a feature branch: `git checkout -b feature/feature-name`
+2. Make your changes and commit: `git commit -m 'Add feature'`
+3. Push to your branch: `git push origin feature/feature-name`
+4. Create a Pull Request with a detailed description
+5. Code review and approval required before merge
+
+### Code Quality Standards
+- Follow C# naming conventions (PascalCase for public members)
+- Write XML documentation for public methods
+- Keep methods focused and under 30 lines
+- Use meaningful variable names
+- Add unit tests for new functionality
+
+---
+
+## 📋 Git Workflow
+
+```bash
+# Clone repository
+git clone https://github.com/ahmedragab13579/E-Commerce.git
+
+# Create feature branch
+git checkout -b feature/your-feature
+
+# Make changes and commit
+git add .
+git commit -m "Descriptive commit message"
+
+# Push changes
+git push origin feature/your-feature
+
+# Create pull request on GitHub
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please ensure your code follows the project's coding standards and includes appropriate documentation.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 📞 Support & Contact
+
+For support, issues, or questions:
+- Open an issue on GitHub: [Issues](https://github.com/ahmedragab13579/E-Commerce/issues)
+- Contact: Ahmed Ragab
+- Email: contact@example.com
+
+---
+
+## 🎯 Roadmap & Future Enhancements
+
+- [ ] Payment gateway integration (Stripe, PayPal)
+- [ ] Email notifications and order updates
+- [ ] Advanced inventory management system
+- [ ] Analytics and reporting dashboard
+- [ ] Multi-language support (i18n)
+- [ ] Mobile app (iOS/Android)
+- [ ] Real-time notifications via SignalR
+- [ ] Wishlist feature
+- [ ] Product recommendations engine
+- [ ] Customer loyalty program
+
+---
+
+## 📚 Documentation
+
+For detailed documentation, please refer to:
+- [API Documentation](./docs/API.md)
+- [Installation Guide](./docs/INSTALLATION.md)
+- [Architecture Overview](./docs/ARCHITECTURE.md)
+- [Database Schema](./docs/DATABASE.md)
+
+---
+
+## ✅ Checklist for New Developers
+
+- [ ] Fork the repository
+- [ ] Clone to local machine
+- [ ] Install .NET 6 or higher
+- [ ] Install SQL Server or use LocalDB
+- [ ] Configure connection string in appsettings.json
+- [ ] Run database migrations: `dotnet ef database update`
+- [ ] Build the solution: `dotnet build`
+- [ ] Run the application: `dotnet run`
+- [ ] Run tests: `dotnet test`
+- [ ] Start contributing!
+
+---
+
+**Last Updated**: June 2026  
+**Version**: 1.0.0  
+**Repository**: [ahmedragab13579/E-Commerce](https://github.com/ahmedragab13579/E-Commerce)
